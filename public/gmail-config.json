@@ -1,0 +1,19 @@
+{
+  "key": "gmail",
+  "rulesPrefix": 10000,
+  "rules": [
+    {
+      "id": 1,
+      "priority": 1,
+      "action": {
+        "type": "block"
+      },
+      "condition": {
+        "urlFilter": "https://mail-ads.google.com/*",
+        "resourceTypes": [
+          "xmlhttprequest"
+        ]
+      }
+    }
+  ]
+}

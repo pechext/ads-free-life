@@ -1,0 +1,73 @@
+name: basic
+run-name: ${{ github.actor }} has pushed new code
+on: 
+  push:
+    branches:    
+      - '*'
+jobs:
+  install:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: create .npmrc
+        run: echo -e "@pechext:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.PECHEXT_GITHUB_TOKEN }}" > .npmrc
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: cache npm dependencies
+        id: cache-npm
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+        
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        name: install dependencies
+        run: npm ci
+
+  linter:
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: create npmrc
+        run: echo "@pechext:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.PECHEXT_GITHUB_TOKEN }}" > .npmrc
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: linter
+        run: npm run lint
+
+  tests:
+    needs: linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: tests
+        run: npm test

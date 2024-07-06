@@ -1,0 +1,12 @@
+{
+  "features": {
+    "gmail": {
+      "name": "Gmail",
+      "state": true
+    },
+    "siteAds": {
+      "name": "Site Ads",
+      "state": true
+    }
+  }
+}
