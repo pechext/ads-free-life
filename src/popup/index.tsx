@@ -2,7 +2,8 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { PopupContainer, PopupFeatureContainer, PopupFeatureToggle } from './option.styled';
 import { MESSAGES } from '../constants';
-import SettingsHelper, { SettingsFeatures } from '../settings';
+import SettingsHelper from '../settings/helper';
+import { SettingsFeatures } from '../settings/model';
 
 const rootElement = document.getElementById('popuproot');
 const root = createRoot(rootElement!);

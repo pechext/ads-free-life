@@ -4,7 +4,8 @@ import BlockManager, { BlockerConfig } from './blocker/blocker';
 import GmailDnrRulesConfig from '../public/gmail-config.json';
 import SiteAdsDnrRulesConfig from '../public/ads-config.json';
 import DefaultSettings from '../public/default-settings.json';
-import SettingsHelper, { SettingsFeature, SettingsFeatures } from './settings';
+import SettingsHelper from './settings/helper';
+import { SettingsFeature, SettingsFeatures } from './settings/model';
 
 function toggleFeature(featureKey: string, featureState: boolean) {
   if (featureState) SettingsHelper.enableFeature(featureKey);
@@ -22,18 +23,18 @@ function onMessage(message: Message, sender: any, sendResponse: (response?: any)
   return false;
 };
 
-async function initBlocker() {
-  SettingsHelper.registerListener(async (featureKey: string, featureState: SettingsFeature) => {
+function initBlocker(): void {
+  SettingsHelper.registerListener((featureKey: string, featureState: SettingsFeature) => {
     switch (featureKey) {
       case 'gmail':
         const gmailAdsBlocker = new BlockManager(GmailDnrRulesConfig as BlockerConfig);
-        if (featureState.state) await gmailAdsBlocker.enable();
-        else await gmailAdsBlocker.disable();
+        if (featureState.state) gmailAdsBlocker.enable();
+        else gmailAdsBlocker.disable();
         break;
       case 'siteAds':
         const siteAdsBlocker = new BlockManager(SiteAdsDnrRulesConfig as BlockerConfig);
-        if (featureState.state) await siteAdsBlocker.enable();
-        else await siteAdsBlocker.disable();
+        if (featureState.state) siteAdsBlocker.enable();
+        else siteAdsBlocker.disable();
         break;
     }
   });

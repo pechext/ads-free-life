@@ -1,23 +1,5 @@
 import { IStorage, LocalStorage, StorageItem } from '@pechext/extension-essentials-lib';
-
-export type SettingsFeature = { name: string, state: boolean; };
-export type SettingsFeatures = { [name: string]: SettingsFeature; };
-
-export class Settings extends StorageItem {
-  features: SettingsFeatures = {};
-
-  protected getKey(): string {
-    return 'settings';
-  }
-
-  protected getVersion(): number {
-    return 1;
-  }
-
-  static get(storage: IStorage): Settings {
-    return new Settings(storage);
-  }
-}
+import { Settings, SettingsFeature, SettingsFeatures } from './model';
 
 type SettingsChangedListener = (featureKey: string, feature: SettingsFeature) => void;
 
@@ -45,7 +27,7 @@ export class _SettingsHelper {
 
   async createFeature(featureKey: string, featureName: string, state: boolean): Promise<void> {
     await this.settings.load();
-    this.settings.features[featureKey] = { name: featureName, state: state };
+    this.settings.features[featureKey] = { name: featureName, state };
     await this.settings.save();
   }
 

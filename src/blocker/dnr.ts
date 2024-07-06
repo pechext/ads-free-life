@@ -27,7 +27,7 @@ class DNRHelper extends DeclarativeNetRequest {
   };
 
   getDynamicRules = async (): Promise<Rule[]> => {
-    return new Promise<any[]>((resolve, reject) => {
+    return new Promise<Rule[]>((resolve, reject) => {
       chrome.declarativeNetRequest.getDynamicRules((rules: Rule[]) => {
         const err = chrome.runtime?.lastError;
         if (err) reject(err);
@@ -37,7 +37,7 @@ class DNRHelper extends DeclarativeNetRequest {
   };
 
   onRuleMatchedDebug = {
-    addListener(callback: (info: MatchedRuleInfoDebug) => void): void {
+    addListener: (callback: (info: MatchedRuleInfoDebug) => void): void => {
       chrome.declarativeNetRequest.onRuleMatchedDebug.addListener(callback);
     }
   };
