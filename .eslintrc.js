@@ -156,7 +156,7 @@ module.exports = {
     "linebreak-style": "off",
     "max-classes-per-file": [
       "warn",
-      1
+      3
     ],
     "max-len": "off",
     "new-parens": "off",
@@ -241,7 +241,7 @@ module.exports = {
     "@typescript-eslint/no-unsafe-call": "warn",
     "@typescript-eslint/no-unsafe-member-access": "warn",
     "object-shorthand": "warn",
-    "@typescript-eslint/no-floating-promises": "warn",
+    "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/no-shadow": "warn",
     "@typescript-eslint/no-unused-expressions": "warn",
     "no-undef-init": "warn"

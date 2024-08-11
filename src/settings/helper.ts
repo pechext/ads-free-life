@@ -1,5 +1,6 @@
-import { IStorage, LocalStorage, StorageItem } from '@pechext/extension-essentials-lib';
+import { IStorage, LocalStorage } from '@pechext/extension-essentials-lib';
 import { Settings, SettingsFeature, SettingsFeatures } from './model';
+import { StorageUpdateValue } from '@pechext/extension-essentials-lib/lib/storage';
 
 type SettingsChangedListener = (featureKey: string, feature: SettingsFeature) => void;
 
@@ -9,9 +10,14 @@ export class _SettingsHelper {
 
   constructor (storage: IStorage) {
     this.settings = Settings.get(storage);
-    this.settings.registerListener((storageItem: StorageItem) => {
-      const features = (storageItem as unknown as Settings).features;
-      Object.keys(features).forEach(key => this.notifyFeatureChanged(key, features[key]));
+    this.settings.registerListener((changes: { [key: string]: StorageUpdateValue; }) => {
+      const settingsChanges = changes['settings'];
+      const oldValue = settingsChanges.oldValue as Settings;
+      const newValue = settingsChanges.newValue as Settings;
+      Object.keys(newValue.features).forEach(key => {
+        const isFeatureUpdated = newValue.features[key].state !== oldValue?.features[key]?.state;
+        if (isFeatureUpdated) this.notifyFeatureChanged(key, newValue.features[key]);
+      });
     });
   }
 

@@ -1,4 +1,4 @@
-import { CrossBrowserAPI, IStorage, SessionStorage } from '@pechext/extension-essentials-lib';
+import { IStorage, SessionStorage } from '@pechext/extension-essentials-lib';
 import { TemporaryStats } from './stats';
 
 class _BadgeManager {
@@ -20,8 +20,8 @@ class _BadgeManager {
   };
 
   private updateBadge = (tabId: number) => {
-    CrossBrowserAPI.action.setBadgeBackgroundColor({ tabId: tabId, color: '#FFC55A' });
-    CrossBrowserAPI.action.setBadgeTextColor({ tabId: tabId, color: '#FFF' });
+    chrome.action.setBadgeBackgroundColor({ tabId, color: '#FFC55A' });
+    chrome.action.setBadgeTextColor({ tabId, color: '#FFF' });
   };
 }
 

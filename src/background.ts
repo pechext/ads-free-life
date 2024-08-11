@@ -7,17 +7,18 @@ import DefaultSettings from '../public/default-settings.json';
 import SettingsHelper from './settings/helper';
 import { SettingsFeature, SettingsFeatures } from './settings/model';
 
-function toggleFeature(featureKey: string, featureState: boolean) {
-  if (featureState) SettingsHelper.enableFeature(featureKey);
-  else SettingsHelper.disableFeature(featureKey);
+async function toggleFeature(featureKey: string, featureState: boolean): Promise<void> {
+  if (featureState) await SettingsHelper.enableFeature(featureKey);
+  else await SettingsHelper.disableFeature(featureKey);
 };
 
-function onMessage(message: Message, sender: any, sendResponse: (response?: any) => void) {
+function onMessage(message: Message<any>, sender: chrome.runtime.MessageSender) {
   if (message.name === MESSAGES.ON_AD_REMOVED) {
-    BadgeManager.increment(sender.tab.id as number);
+    if (sender.tab) BadgeManager.increment(sender.tab.id as number);
   } else if (message.name === MESSAGES.TOGGLE_FEATURE) {
-    const featureKey = message.data.featureKey as string;
-    const isEnabled = !!message.data.featureState;
+    const toggleMessage = message as Message<ToggleFeatureMessageData>;
+    const featureKey = toggleMessage.data.featureKey;
+    const isEnabled = !!toggleMessage.data.featureState;
     toggleFeature(featureKey, isEnabled);
   }
   return false;

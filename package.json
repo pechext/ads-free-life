@@ -21,7 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@pechext/extension-essentials-lib": "^0.1.4",
+    "@pechext/extension-essentials-lib": "^0.1.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "styled-components": "^6.0.8"

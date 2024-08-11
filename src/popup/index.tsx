@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { PopupContainer, PopupFeatureContainer, PopupFeatureToggle } from './option.styled';
+import { PopupContainer, PopupFeatureContainer, PopupFeatureToggle, PopupTitleContainer } from './option.styled';
 import { MESSAGES } from '../constants';
 import SettingsHelper from '../settings/helper';
 import { SettingsFeatures } from '../settings/model';
@@ -25,7 +25,7 @@ export default function Popup() {
   const onToggle = (e: ChangeEvent) => {
     const newState = (e.target as HTMLInputElement).checked;
     const featureKey = (e.target as HTMLInputElement).name;
-    const message: Message = { name: MESSAGES.TOGGLE_FEATURE, data: { featureKey: featureKey, featureState: newState } };
+    const message: Message<ToggleFeatureMessageData> = { name: MESSAGES.TOGGLE_FEATURE, data: { featureKey: featureKey, featureState: newState } };
     chrome.runtime.sendMessage(message);
   };
 
@@ -50,7 +50,10 @@ export default function Popup() {
 
   return (
     <PopupContainer>
-      <h2>Ads Free Life</h2>
+      <PopupTitleContainer>
+        <img src="images/48.png"></img>
+        <h2>Ads Free Life</h2>
+      </PopupTitleContainer>
       <PopupFeatures features={features} />
     </PopupContainer>
   );

@@ -1,4 +1,9 @@
-type Message = {
+interface Message<T> {
   name: string;
-  data: any;
+  data: T;
+}
+
+interface ToggleFeatureMessageData {
+  featureKey: string;
+  featureState: boolean;
 }

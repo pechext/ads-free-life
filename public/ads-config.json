@@ -3,49 +3,18 @@
   "rulesPrefix": 20000,
   "rules": [
     {
-      "id": 1,
-      "priority": 1,
-      "action": {
-        "type": "block"
-      },
-      "condition": {
-        "urlFilter": "https://*.googlesyndication.com/*",
-        "resourceTypes": [
-          "main_frame",
-          "sub_frame",
-          "script"
-        ]
-      }
-    },
-    {
-      "id": 2,
-      "priority": 1,
-      "action": {
-        "type": "block"
-      },
-      "condition": {
-        "urlFilter": "https://*.googleadservices.com/pagead/*",
-        "resourceTypes": [
-          "main_frame",
-          "sub_frame",
-          "script"
-        ]
-      }
-    },
-    {
-      "id": 3,
-      "priority": 1,
-      "action": {
-        "type": "block"
-      },
-      "condition": {
-        "urlFilter": "https://*.g.doubleclick.net/pagead/*",
-        "resourceTypes": [
-          "main_frame",
-          "sub_frame",
-          "script"
-        ]
-      }
+      "resourceTypes": [
+        "main_frame",
+        "sub_frame",
+        "script"
+      ],
+      "urlsFilter": [
+        "https://*.googlesyndication.com/*",
+        "https://*.googleadservices.com/pagead/*",
+        "https://*.g.doubleclick.net/pagead/*",
+        "https://*.taboola.com/*",
+        "https://*.trvdp.com/*"
+      ]
     }
   ]
 }
