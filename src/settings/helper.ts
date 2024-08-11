@@ -11,7 +11,7 @@ export class _SettingsHelper {
   constructor (storage: IStorage) {
     this.settings = Settings.get(storage);
     this.settings.registerListener((changes: { [key: string]: StorageUpdateValue; }) => {
-      const settingsChanges = changes['settings'];
+      const settingsChanges = changes.settings;
       const oldValue = settingsChanges.oldValue as Settings;
       const newValue = settingsChanges.newValue as Settings;
       Object.keys(newValue.features).forEach(key => {
