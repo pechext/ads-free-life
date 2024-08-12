@@ -4,16 +4,16 @@ const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env) => {
-  const config = { 
+  const config = {
     mode: env.mode ? env.mode : 'development',
     watch: env.watch ? env.watch === 'true' : false,
     entry: {
-      content: path.resolve(__dirname, '..', 'src', 'content.ts'), 
+      content: path.resolve(__dirname, '..', 'src', 'content.ts'),
       background: path.resolve(__dirname, '..', 'src', 'background.ts'),
       popup: path.resolve(__dirname, '..', 'src', 'popup/index.tsx'),
     },
     output: {
-      path: path.join(__dirname, '../dist'),
+      path: path.join(__dirname, `../dist/${env.browser}`),
       filename: '[name].js',
       clean: true
     },
@@ -33,11 +33,11 @@ module.exports = (env) => {
       new CopyPlugin({
         patterns: [
           {
-            from: '.', 
-            to: '.', 
-            context: 'public', 
+            from: '.',
+            to: '.',
+            context: 'public',
             globOptions: {
-              ignore: [ '**/.DS_Store' ]
+              ignore: ['**/.DS_Store']
             }
           }
         ]
@@ -52,7 +52,7 @@ module.exports = (env) => {
     minimizer: [
       new TerserPlugin({
         extractComments: true,
-        terserOptions: {          
+        terserOptions: {
           compress: { drop_console: true },
         }
       }),

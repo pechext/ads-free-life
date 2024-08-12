@@ -6,8 +6,8 @@
   "scripts": {
     "clean": "rm -Rf ./dist",
     "build": "webpack --progress --config webpack/webpack.config.js",
-    "build:production": "npm run build -- --env=mode=production",
-    "build:staging": "npm run build -- --env=mode=development",
+    "build:production": "npm run build -- --env=mode=production --env=browser=chrome",
+    "build:staging": "npm run build -- --env=mode=development --env=browser=chrome",
     "zip:staging": "mkdir -p ./dist/chrome && cd ./dist/chrome; zip -vr ../../dist/chrome/staging-`echo $(git symbolic-ref --short HEAD) | tr / _`-`git rev-parse --short HEAD`.zip ./* -x \"*.DS_Store\"",
     "zip:production": "mkdir -p ./dist/chrome && cd ./dist/chrome; zip -vr ../../dist/chrome/production-`echo $(git symbolic-ref --short HEAD) | tr / _`-`git rev-parse --short HEAD`.zip ./* -x \"*.DS_Store\"",
     "prepare:staging": "npm run build:staging && npm run zip:staging",
