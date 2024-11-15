@@ -2,10 +2,10 @@ import { BlockDnrRule, DnrRule } from './rule';
 import DNRHelper from './dnr';
 import { generateRuleId, isRelevantId } from './utils';
 
-type RuleActionType = chrome.declarativeNetRequest.RuleActionType;
 type RuleCondition = chrome.declarativeNetRequest.RuleCondition;
 
 export interface BlockerConfig {
+  name: string,
   key: string,
   rulesPrefix: number;
   rules: BlockDnrRule[];
@@ -19,7 +19,7 @@ export default class BlockManager {
     const dnrRules: DnrRule[] = [];
     for (let i = 0; i < this.config.rules.length; i++) {
       const rule = this.config.rules[i];
-      const rules: DnrRule[] = rule.urlsFilter.map((url, urlIndex) => {
+      const rules: DnrRule[] = rule.urlFilters.map((url, urlIndex) => {
         const condition: RuleCondition = {
           urlFilter: url,
           resourceTypes: rule.resourceTypes,

@@ -1,7 +1,7 @@
 import { IStorage, StorageItem } from '@pechext/extension-essentials-lib';
 
 export type SettingsFeature = { name: string, state: boolean; };
-export type SettingsFeatures = { [name: string]: SettingsFeature; };
+export type SettingsFeatures = { [key: string]: SettingsFeature; };
 
 export class Settings extends StorageItem {
   features: SettingsFeatures = {};

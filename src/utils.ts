@@ -15,20 +15,20 @@ export function isVisibleInViewport(element: Element): boolean {
   const baseElementLeft = rect.left;
   const baseElementTop = rect.top;
 
-  const elementFromStartingPoint = document.elementFromPoint(baseElementLeft,baseElementTop);
-  
+  const elementFromStartingPoint = document.elementFromPoint(baseElementLeft, baseElementTop);
+
   if (elementFromStartingPoint != null && !element.isSameNode(elementFromStartingPoint)) {
     const elementZIndex = elementStyle.zIndex;
     const elementOverlappingZIndex = window.getComputedStyle(elementFromStartingPoint).zIndex;
     if (Number(elementZIndex) < Number(elementOverlappingZIndex)) return false;
-  
+
     if (elementZIndex === '' && elementOverlappingZIndex === '') {
       if (element.compareDocumentPosition(elementFromStartingPoint) & Node.DOCUMENT_POSITION_FOLLOWING) {
         return false;
       }
     }
   }
-  
+
   return (
     rect.top >= 0 &&
     rect.left >= 0 &&

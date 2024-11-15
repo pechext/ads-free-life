@@ -5,7 +5,7 @@ type RuleCondition = chrome.declarativeNetRequest.RuleCondition;
 
 export interface BlockDnrRule {
   resourceTypes: ResourceType[];
-  urlsFilter: string[];
+  urlFilters: string[];
 }
 
 export interface DnrRule {

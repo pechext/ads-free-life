@@ -1,4 +1,5 @@
 {
+  "name": "Site Ads",
   "key": "site-ads",
   "rulesPrefix": 20000,
   "rules": [
@@ -8,9 +9,8 @@
         "sub_frame",
         "script"
       ],
-      "urlsFilter": [
+      "urlFilters": [
         "https://*.googlesyndication.com/*",
-        "https://*.googleadservices.com/pagead/*",
         "https://*.g.doubleclick.net/pagead/*",
         "https://*.taboola.com/*",
         "https://*.trvdp.com/*"
