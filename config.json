@@ -1,0 +1,62 @@
+{
+  "v": 1,
+  "items": [
+    {
+      "key": "basic-site-ads",
+      "rulesPrefix": 2000,
+      "rules": {
+        "default": {
+          "name": "Basic Google Ads",
+          "rule": {
+            "resourceTypes": [
+              "main_frame",
+              "sub_frame",
+              "script"
+            ],
+            "urlFilters": [
+              "https://*.googlesyndication.com/*",
+              "https://*.g.doubleclick.net/pagead/*"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "key": "advanced-site-ads",
+      "rulesPrefix": 3000,
+      "rules": {
+        "default": {
+          "name": "Taboola Ads",
+          "rule": {
+            "resourceTypes": [
+              "main_frame",
+              "sub_frame",
+              "script"
+            ],
+            "urlFilters": [
+              "https://*.taboola.com/*",
+              "https://*.trvdp.com/*"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "key": "gmail",
+      "rulesPrefix": 1000,
+      "rules": {
+        "default": {
+          "name": "Gmail Ads",
+          "rule": {
+            "resourceTypes": [
+              "xmlhttprequest"
+            ],
+            "urlFilters": [
+              "https://mail-ads.google.com/*"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

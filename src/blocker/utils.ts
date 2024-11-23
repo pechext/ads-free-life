@@ -1,16 +1,7 @@
-export function generateRuleId(extKey: string, rulesPrefix: number, ruleId: number): number {
-  let extKeyVal = extKey.length;
-  Array.from(extKey).forEach(ch => {
-    extKeyVal += ch.charCodeAt(0);
-  });
-  return Math.floor(extKeyVal * rulesPrefix + ruleId);
+export function generateRuleId(rulesPrefix: number, ruleId: number): number {
+  return Math.floor(rulesPrefix + ruleId + (Date.now() * Math.random() / 1000));
 }
 
-export function isRelevantId(id: number, extKey: string, rulesPrefix: number): boolean {
-  let extKeyVal = extKey.length;
-  Array.from(extKey).forEach(ch => {
-    extKeyVal += ch.charCodeAt(0);
-  });
-  id = Math.floor(id / extKeyVal);
-  return id === rulesPrefix;
+export function getStorageKey(configKey: string, ruleKey: string): string {
+  return `${configKey}_${ruleKey}`;
 }

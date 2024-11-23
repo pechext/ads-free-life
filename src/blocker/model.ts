@@ -1,12 +1,13 @@
 import { IStorage, StorageItem } from '@pechext/extension-essentials-lib';
+import { BlockDnrRule } from './rule';
+import { BlockerConfig } from './blocker';
+import { Config } from '../config';
 
-type ResourceType = chrome.declarativeNetRequest.ResourceType;
-
-export type StoredRules = { [key: string]: { name: string; rule: StoredRule; }; };
-export type StoredRule = { resourceTypes: ResourceType[]; urlFilters: string[]; };
+export type StoredRule = { name: string; rule: BlockDnrRule; };
+export type StoredRules = Record<string, Record<string, StoredRule>>;
 
 export class Rules extends StorageItem {
-  rules: StoredRules = {};
+  data: StoredRules = {};
 
   protected getKey(): string {
     return 'rules';
@@ -18,5 +19,24 @@ export class Rules extends StorageItem {
 
   static get(storage: IStorage): Rules {
     return new Rules(storage);
+  }
+}
+
+export class ConfigStorageItem extends StorageItem {
+  config: Config = {
+    v: 0,
+    items: []
+  };
+
+  protected getKey(): string {
+    return 'blocker_configs';
+  }
+
+  protected getVersion(): number {
+    return 1;
+  }
+
+  static get(storage: IStorage): ConfigStorageItem {
+    return new ConfigStorageItem(storage);
   }
 }

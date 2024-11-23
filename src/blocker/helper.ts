@@ -1,25 +1,30 @@
 import { IStorage, LocalStorage } from '@pechext/extension-essentials-lib';
-import { Rules, StoredRule, StoredRules } from './model';
+import { ConfigStorageItem } from './model';
+import { BlockerConfig } from './blocker';
+import { Config } from '../config';
 
 export class _RulesHelper {
-  private rules: Rules;
+  private configStorageItem: ConfigStorageItem;
 
   constructor (storage: IStorage) {
-    this.rules = Rules.get(storage);
+    this.configStorageItem = ConfigStorageItem.get(storage);
   }
 
-  async getRules(): Promise<StoredRules> {
-    await this.rules.load();
-    return this.rules.rules;
+  async storeConfig(config: Config): Promise<void> {
+    await this.configStorageItem.load();
+    if (this.configStorageItem.config.v < config.v) {
+      this.configStorageItem.config = config;
+      this.saveChanges();
+    }
   }
 
-  async updateRule(key: string, name: string, rule: StoredRule): Promise<void> {
-    this.rules.rules[key] = { name: name, rule: rule };
-    await this.saveChanges();
+  async getConfigs(): Promise<BlockerConfig[]> {
+    await this.configStorageItem.load();
+    return this.configStorageItem.config.items;
   }
 
   private async saveChanges(): Promise<void> {
-    await this.rules.save();
+    await this.configStorageItem.save();
   }
 }
 

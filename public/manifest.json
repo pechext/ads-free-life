@@ -17,7 +17,8 @@
   "permissions": [
     "storage",
     "activeTab",
-    "declarativeNetRequest"
+    "declarativeNetRequest",
+    "alarms"
   ],
   "background": {
     "service_worker": "background.js"

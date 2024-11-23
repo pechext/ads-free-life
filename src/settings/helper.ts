@@ -1,6 +1,7 @@
 import { IStorage, LocalStorage } from '@pechext/extension-essentials-lib';
 import { Settings, SettingsFeature, SettingsFeatures } from './model';
 import { StorageUpdateValue } from '@pechext/extension-essentials-lib/lib/storage';
+import { StoredRules } from '../blocker/model';
 
 type SettingsChangedListener = (featureKey: string, feature: SettingsFeature) => void;
 
@@ -38,8 +39,14 @@ export class _SettingsHelper {
   }
 
   async createFeatures(features: SettingsFeatures): Promise<void> {
-    const promises = Object.keys(features).map(f => this.createFeature(f, features[f].name, features[f].state));
-    await Promise.all(promises);
+    for (const featureKey of Object.keys(features)) {
+      await this.createFeature(featureKey, features[featureKey].name, features[featureKey].state);
+    }
+  }
+
+  async clearFeatures(): Promise<void> {
+    this.settings.features = {};
+    await this.settings.save();
   }
 
   async enableFeature(featureKey: string): Promise<void> {

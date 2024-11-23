@@ -25,7 +25,6 @@ export const PopupFeatureContainer = styled.div`
   padding-left: 16px;
   padding-right: 16px;
   margin-bottom: 4px;
-  gap: 50%;
   position: relative;
   background-color: #fff7f1;
   border-radius: 8px;

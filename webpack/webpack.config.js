@@ -42,7 +42,10 @@ module.exports = (env) => {
           }
         ]
       }),
-      new webpack.DefinePlugin({})
+      new webpack.DefinePlugin({
+        __BUILD_DATE__: Date.now(),
+        __BLOCKER_CONFIG_URL__: env.mode === 'production' ? "'http://localhost:8000/config.json'" : "'http://localhost:8000/config.json'",
+      }),
     ],
   }
 

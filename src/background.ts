@@ -1,12 +1,10 @@
 import { MESSAGES } from './constants';
 import { BadgeManager } from './badge';
-import BlockManager, { BlockerConfig } from './blocker/blocker';
-import GmailDnrRulesConfig from '../public/gmail-config.json';
-import SiteAdsDnrRulesConfig from '../public/ads-config.json';
 import SettingsHelper from './settings/helper';
-import { SettingsFeature, SettingsFeatures } from './settings/model';
+import { SettingsFeature } from './settings/model';
+import RulesUpdater from './blocker/updater';
+import BlockManager from './blocker/blocker';
 import RulesHelper from './blocker/helper';
-import { StoredRules } from './blocker/model';
 
 async function toggleFeature(featureKey: string, featureState: boolean): Promise<void> {
   if (featureState) await SettingsHelper.enableFeature(featureKey);
@@ -26,43 +24,30 @@ function onMessage(message: Message<any>, sender: chrome.runtime.MessageSender) 
 };
 
 function initBlocker(): void {
-  SettingsHelper.registerListener((featureKey: string, featureState: SettingsFeature) => {
-    switch (featureKey) {
-      case 'gmail':
-        const gmailAdsBlocker = new BlockManager(GmailDnrRulesConfig as BlockerConfig);
-        if (featureState.state) gmailAdsBlocker.enable();
-        else gmailAdsBlocker.disable();
-        break;
-      case 'site-ads':
-        const siteAdsBlocker = new BlockManager(SiteAdsDnrRulesConfig as BlockerConfig);
-        if (featureState.state) siteAdsBlocker.enable();
-        else siteAdsBlocker.disable();
-        break;
-    }
+  SettingsHelper.registerListener(async (featureKey: string, featureState: SettingsFeature) => {
+    const ruleKeyParts = featureKey.split('_');
+    const rulesGroupKey = ruleKeyParts[0];
+    const ruleKey = ruleKeyParts[1];
+    let configs = await RulesHelper.getConfigs();
+    const config = configs.filter(c => c.key === rulesGroupKey).find(c => ruleKey in c.rules);
+    if (!config) return;
+    console.log('SettingsHelper ->', featureKey, featureState);
+    const blocker = await BlockManager.get();
+    if (featureState.state) blocker.enable(featureKey, config.rules[ruleKey].rule, config.rulesPrefix);
+    else blocker.disable(featureKey);
   });
 };
 
 initBlocker();
 
 chrome.runtime.onMessage.addListener(onMessage);
-chrome.runtime.onInstalled.addListener((details: chrome.runtime.InstalledDetails) => {
+chrome.runtime.onInstalled.addListener(async (details: chrome.runtime.InstalledDetails) => {
+  if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
+    await RulesUpdater.onInstall();
+  }
+
   if (details.reason === chrome.runtime.OnInstalledReason.INSTALL || details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
-    // Setup Default Settings
-    const defaultRules: BlockerConfig[] = [
-      GmailDnrRulesConfig as BlockerConfig,
-      SiteAdsDnrRulesConfig as BlockerConfig,
-    ];
-    const promises = defaultRules.flatMap(config => config.rules.map(r => RulesHelper.updateRule(config.key, config.name, r)));
-    Promise.all(promises).then(() => {
-      RulesHelper.getRules().then(async (rules: StoredRules) => {
-        const currentSettings: SettingsFeatures = await SettingsHelper.getFeatures();
-        Object.keys(rules)
-          .filter(key => !(key in currentSettings))
-          .forEach(key => {
-            currentSettings[key] = { name: rules[key].name, state: true };
-          });
-        SettingsHelper.createFeatures(currentSettings);
-      });
-    });
+    RulesUpdater.init();
+    RulesUpdater.schedule(1, 1, true);
   }
 });

@@ -36,3 +36,5 @@ export function isVisibleInViewport(element: Element): boolean {
     rect.right <= (window.innerWidth || document.documentElement.clientWidth)
   );
 };
+
+export const minutesToMillis = (minutes: number): number => minutes * 60 * 1000;
