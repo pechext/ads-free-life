@@ -2,11 +2,11 @@
   "v": 1,
   "items": [
     {
-      "key": "basic-site-ads",
+      "key": "site-ads-1",
       "rulesPrefix": 2000,
       "rules": {
         "default": {
-          "name": "Basic Google Ads",
+          "name": "Google Ads",
           "rule": {
             "resourceTypes": [
               "main_frame",
@@ -22,7 +22,7 @@
       }
     },
     {
-      "key": "advanced-site-ads",
+      "key": "site-ads-2",
       "rulesPrefix": 3000,
       "rules": {
         "default": {
@@ -42,7 +42,7 @@
       }
     },
     {
-      "key": "gmail",
+      "key": "gmail-ads",
       "rulesPrefix": 1000,
       "rules": {
         "default": {
