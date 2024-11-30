@@ -43,8 +43,8 @@ module.exports = (env) => {
         ]
       }),
       new webpack.DefinePlugin({
-        __BUILD_DATE__: Date.now(),
-        __BLOCKER_CONFIG_URL__: env.mode === 'production' ? "'http://localhost:8000/config.json'" : "'http://localhost:8000/config.json'",
+        _BUILD_DATE: Date.now(),
+        _BLOCKER_CONFIG_URL: env.mode === 'production' ? "'http://localhost:8000/config.json'" : "'https://raw.githubusercontent.com/pechext/ads-free-life/refs/heads/dev/config.json'",
       }),
     ],
   }

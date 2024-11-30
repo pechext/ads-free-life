@@ -6,7 +6,7 @@ import RulesHelper, { _RulesHelper } from './helper';
 import { getStorageKey } from './utils';
 import DNRHelper from './dnr';
 
-declare let __BLOCKER_CONFIG_URL__: string;
+declare let _BLOCKER_CONFIG_URL: string;
 
 export class _RulesUpdater {
   private static readonly ALARM_NAME: string = 'RulesUpdaterAlarm';
@@ -44,9 +44,7 @@ export class _RulesUpdater {
   public async download(url: string): Promise<Config | null> {
     try {
       const response = await fetch(url);
-      const data = await response.json();
-      console.log(`downloaded blocker config ${JSON.stringify(data)}`);
-      return data as Config;
+      return (await response.json()) as Config;
     } catch (exception) {
       return null;
     }
@@ -101,5 +99,5 @@ export class _RulesUpdater {
   }
 }
 
-const RulesUpdater = _RulesUpdater.create(RulesHelper, SettingsHelper, __BLOCKER_CONFIG_URL__);
+const RulesUpdater = _RulesUpdater.create(RulesHelper, SettingsHelper, _BLOCKER_CONFIG_URL);
 export default RulesUpdater;
