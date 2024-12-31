@@ -52,7 +52,7 @@ export default function Popup() {
     <PopupContainer>
       <PopupTitleContainer>
         <img src="images/48.png"></img>
-        <h2>Ads Free Life</h2>
+        <h2>Coco Blocker</h2>
       </PopupTitleContainer>
       <PopupFeatures features={features} />
     </PopupContainer>

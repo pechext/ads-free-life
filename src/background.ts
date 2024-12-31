@@ -25,16 +25,17 @@ function onMessage(message: Message<any>, sender: chrome.runtime.MessageSender) 
 
 function initBlocker(): void {
   SettingsHelper.registerListener((featureKey: string, featureState: SettingsFeature) => {
-    const ruleKeyParts = featureKey.split('_');
-    const rulesGroupKey = ruleKeyParts[0];
-    const ruleKey = ruleKeyParts[1];
-    RulesHelper.getConfigs().then(async configs => {
+    (async () => {
+      const ruleKeyParts = featureKey.split('_');
+      const rulesGroupKey = ruleKeyParts[0];
+      const ruleKey = ruleKeyParts[1];
+      const configs = await RulesHelper.getConfigs();
       const config = configs.filter(c => c.key === rulesGroupKey).find(c => ruleKey in c.rules);
       if (!config) return;
       const blocker = await BlockManager.get();
       if (featureState.state) blocker.enable(featureKey, config.rules[ruleKey].rule, config.rulesPrefix);
       else blocker.disable(featureKey);
-    });
+    })();
   });
 };
 
@@ -49,7 +50,7 @@ chrome.runtime.onInstalled.addListener((details: chrome.runtime.InstalledDetails
 
     if (details.reason === chrome.runtime.OnInstalledReason.INSTALL || details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
       RulesUpdater.init();
-      RulesUpdater.schedule(1, 1, true);
+      RulesUpdater.schedule(1, 720, true);
     }
-  })();
+  })()
 });

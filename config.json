@@ -2,7 +2,7 @@
   "v": 1,
   "items": [
     {
-      "key": "site-ads-1",
+      "key": "google-site-ads",
       "rulesPrefix": 2000,
       "rules": {
         "default": {
@@ -22,7 +22,7 @@
       }
     },
     {
-      "key": "site-ads-2",
+      "key": "taboola-site-ads",
       "rulesPrefix": 3000,
       "rules": {
         "default": {
