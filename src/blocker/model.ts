@@ -1,6 +1,5 @@
 import { IStorage, StorageItem } from '@pechext/extension-essentials-lib';
 import { BlockDnrRule } from './rule';
-import { BlockerConfig } from './blocker';
 import { Config } from '../config';
 
 export type StoredRule = { name: string; rule: BlockDnrRule; };

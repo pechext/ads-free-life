@@ -33,7 +33,7 @@ export default class BlockManager {
         id: generateRuleId(rulesPrefix, urlIndex),
         priority: 1,
         action: { type: chrome.declarativeNetRequest.RuleActionType.BLOCK },
-        condition: condition,
+        condition,
       };
     });
     dnrRules.push(...rules);

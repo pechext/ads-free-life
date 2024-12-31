@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 const path = require('path');
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -44,7 +47,7 @@ module.exports = (env) => {
       }),
       new webpack.DefinePlugin({
         __BUILD_DATE__: Date.now(),
-        __BLOCKER_CONFIG_URL__: env.mode === 'production' ? "'http://localhost:8000/config.json'" : "'http://localhost:8000/config.json'",
+        __BLOCKER_CONFIG_URL__: env.mode === 'production' ? "'http://localhost:8000/config.json'" : "'https://raw.githubusercontent.com/pechext/ads-free-life/refs/heads/dev/config.json'",
       }),
     ],
   }

@@ -9,15 +9,15 @@ export default class DBHelper implements IStorage {
   ) { }
 
   static async createDatabase(databaseName: string, storeName: string): Promise<DBHelper> {
-    const db = await DatabaseDriver.open(databaseName, 1, async (driver: DatabaseDriver, oldV: number, newV: number | null) => {
-      console.log(oldV, newV);
-      await driver.createStore({ name: storeName });
+    const db = await DatabaseDriver.open(databaseName, 1, (driver: DatabaseDriver, oldV: number, newV: number | null) => {
+      driver.createStore({ name: storeName });
     });
     return new DBHelper(db, storeName);
   }
 
   async get(key: StorageKey): Promise<number[]> {
-    return await this.db.store<string, number[]>(this.storeName).get(key);
+    const store = this.db.store<string, number[]>(this.storeName);
+    return (await store.get(key)) as number[];
   }
 
   gets(...keys: StorageKey[]): Promise<StorageResult<any>> {

@@ -1,7 +1,6 @@
 import { IStorage, LocalStorage } from '@pechext/extension-essentials-lib';
 import { Settings, SettingsFeature, SettingsFeatures } from './model';
 import { StorageUpdateValue } from '@pechext/extension-essentials-lib/lib/storage';
-import { StoredRules } from '../blocker/model';
 
 type SettingsChangedListener = (featureKey: string, feature: SettingsFeature) => void;
 
