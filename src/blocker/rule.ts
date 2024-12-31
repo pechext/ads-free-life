@@ -3,6 +3,11 @@ type RuleActionType = chrome.declarativeNetRequest.RuleActionType;
 type RequestMethod = chrome.declarativeNetRequest.RequestMethod;
 type RuleCondition = chrome.declarativeNetRequest.RuleCondition;
 
+export interface BlockDnrRule {
+  resourceTypes: ResourceType[];
+  urlFilters: string[];
+}
+
 export interface DnrRule {
   id: number;
   priority: number;
@@ -27,7 +32,7 @@ abstract class Rule {
     return {
       id: this.ruleId,
       priority: 1,
-      condition: condition,
+      condition,
       action: { type: this.getAction() }
     };
   }

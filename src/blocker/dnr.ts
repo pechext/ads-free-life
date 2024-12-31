@@ -36,6 +36,12 @@ class DNRHelper extends DeclarativeNetRequest {
     });
   };
 
+  clearRules = async (): Promise<void> => {
+    await chrome.declarativeNetRequest.updateDynamicRules(
+      { removeRuleIds: (await chrome.declarativeNetRequest.getDynamicRules()).map(r => r.id) }
+    );
+  };
+
   onRuleMatchedDebug = {
     addListener: (callback: (info: MatchedRuleInfoDebug) => void): void => {
       chrome.declarativeNetRequest.onRuleMatchedDebug.addListener(callback);

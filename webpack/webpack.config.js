@@ -1,19 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 const path = require('path');
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env) => {
-  const config = { 
+  const config = {
     mode: env.mode ? env.mode : 'development',
     watch: env.watch ? env.watch === 'true' : false,
     entry: {
-      content: path.resolve(__dirname, '..', 'src', 'content.ts'), 
+      content: path.resolve(__dirname, '..', 'src', 'content.ts'),
       background: path.resolve(__dirname, '..', 'src', 'background.ts'),
       popup: path.resolve(__dirname, '..', 'src', 'popup/index.tsx'),
     },
     output: {
-      path: path.join(__dirname, '../dist'),
+      path: path.join(__dirname, `../dist/${env.browser}`),
       filename: '[name].js',
       clean: true
     },
@@ -33,16 +36,19 @@ module.exports = (env) => {
       new CopyPlugin({
         patterns: [
           {
-            from: '.', 
-            to: '.', 
-            context: 'public', 
+            from: '.',
+            to: '.',
+            context: 'public',
             globOptions: {
-              ignore: [ '**/.DS_Store' ]
+              ignore: ['**/.DS_Store']
             }
           }
         ]
       }),
-      new webpack.DefinePlugin({})
+      new webpack.DefinePlugin({
+        __BUILD_DATE__: Date.now(),
+        __BLOCKER_CONFIG_URL__: env.mode === 'production' ? "'http://localhost:8000/config.json'" : "'https://raw.githubusercontent.com/pechext/ads-free-life/refs/heads/dev/config.json'",
+      }),
     ],
   }
 
@@ -52,7 +58,7 @@ module.exports = (env) => {
     minimizer: [
       new TerserPlugin({
         extractComments: true,
-        terserOptions: {          
+        terserOptions: {
           compress: { drop_console: true },
         }
       }),

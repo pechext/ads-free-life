@@ -1,34 +1,64 @@
-import { DnrRule } from './rule';
+import { BlockDnrRule, DnrRule } from './rule';
 import DNRHelper from './dnr';
-import { generateRuleId, isRelevantId } from './utils';
+import { generateRuleId } from './utils';
+import { StoredRule } from './model';
+import DBHelper from '../utils/db';
+
+type RuleCondition = chrome.declarativeNetRequest.RuleCondition;
 
 export interface BlockerConfig {
   key: string,
   rulesPrefix: number;
-  rules: DnrRule[];
+  rules: Record<string, StoredRule>;
 }
 
 export default class BlockManager {
-  constructor (private config: BlockerConfig) { }
+  private constructor (private db: DBHelper) { }
 
-  async enable() {
-    await this.disable();
-    const dnrRules = this.config.rules.map(r => {
+  static async get(): Promise<BlockManager> {
+    return new BlockManager(await DBHelper.createDatabase('blocker', 'enabled_rules'));
+  }
+
+  async enable(ruleId: string, rule: BlockDnrRule, rulesPrefix: number) {
+    await this.disable(ruleId);
+    const dnrRules: DnrRule[] = [];
+    const blockerEnabledRules: { [key: string]: number[]; } = {};
+    const rules: DnrRule[] = rule.urlFilters.map((url, urlIndex) => {
+      const condition: RuleCondition = {
+        urlFilter: url,
+        resourceTypes: rule.resourceTypes,
+      };
+
       return {
-        id: generateRuleId(this.config.key, this.config.rulesPrefix, r.id),
-        priority: r.priority,
-        action: r.action,
-        condition: r.condition
+        id: generateRuleId(rulesPrefix, urlIndex),
+        priority: 1,
+        action: { type: chrome.declarativeNetRequest.RuleActionType.BLOCK },
+        condition,
       };
     });
-    console.log(`Blocker[${this.config.key}] enabled, adding the following rules:\n${JSON.stringify(dnrRules)}`);
+    dnrRules.push(...rules);
+    blockerEnabledRules[ruleId] = rules.map(r => r.id);
+    console.log(`Blocker enabled, adding the following rules:\n${JSON.stringify(dnrRules)} (${JSON.stringify(blockerEnabledRules)})`);
     await DNRHelper.updateDynamicRules({ addRules: dnrRules });
+    await this.db.set(ruleId, rules.map(r => r.id));
   }
 
-  async disable() {
-    let existingRules = await DNRHelper.getDynamicRules();
-    existingRules = existingRules.filter(r => isRelevantId(r.id, this.config.key, this.config.rulesPrefix));
-    console.log(`Blocker[${this.config.key}] disabled, removing the following rules:\n${JSON.stringify(existingRules)}`);
-    await DNRHelper.updateDynamicRules({ removeRuleIds: existingRules.map(r => r.id) });
+  async disable(ruleId: string) {
+    const idsToRemove = await this.db.get(ruleId);
+    console.log(`Blocker disabled, removing the following rules:\n${JSON.stringify(idsToRemove)}`);
+    await DNRHelper.updateDynamicRules({ removeRuleIds: idsToRemove });
+    await this.db.remove(ruleId);
   }
-}
+
+  async disableByRules(specificIds?: number[]) {
+    let rulesIdsToRemove: number[] = [];
+    if (specificIds) {
+      rulesIdsToRemove = specificIds;
+    } else {
+      const dnrRules = await DNRHelper.getDynamicRules();
+      rulesIdsToRemove = dnrRules.map(r => r.id);
+    }
+    console.log(`Blocker disabled, removing the following rules:\n${JSON.stringify(rulesIdsToRemove)}`);
+    await DNRHelper.updateDynamicRules({ removeRuleIds: rulesIdsToRemove });
+  }
+};

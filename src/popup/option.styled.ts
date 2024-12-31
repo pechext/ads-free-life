@@ -7,6 +7,16 @@ export const PopupContainer = styled.div`
   width: 200px;
 `;
 
+export const PopupTitleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 8px;
+  justify-content: center;
+`;
+
+
 export const PopupFeatureContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -15,7 +25,6 @@ export const PopupFeatureContainer = styled.div`
   padding-left: 16px;
   padding-right: 16px;
   margin-bottom: 4px;
-  gap: 50%;
   position: relative;
   background-color: #fff7f1;
   border-radius: 8px;

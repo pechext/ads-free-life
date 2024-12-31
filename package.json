@@ -1,15 +1,15 @@
 {
-  "name": "ads-free-life",
+  "name": "coco-blocker",
   "version": "1.0.0",
   "description": "Make you everyday life as ads free as possible",
   "main": "index.js",
   "scripts": {
     "clean": "rm -Rf ./dist",
     "build": "webpack --progress --config webpack/webpack.config.js",
-    "build:production": "npm run build -- --env=mode=production",
-    "build:staging": "npm run build -- --env=mode=development",
-    "zip:staging": "cd ./dist/chrome; zip -vr ../../dist/chrome/staging-`echo $(git symbolic-ref --short HEAD) | tr / _`-`git rev-parse --short HEAD`.zip ./* -x \"*.DS_Store\"",
-    "zip:production": "cd ./dist/chrome; zip -vr ../../dist/chrome/production-`echo $(git symbolic-ref --short HEAD) | tr / _`-`git rev-parse --short HEAD`.zip ./* -x \"*.DS_Store\"",
+    "build:production": "npm run build -- --env=mode=production --env=browser=chrome",
+    "build:staging": "npm run build -- --env=mode=development --env=browser=chrome",
+    "zip:staging": "mkdir -p ./dist/chrome && cd ./dist/chrome; zip -vr ../../dist/chrome/staging-`echo $(git symbolic-ref --short HEAD) | tr / _`-`git rev-parse --short HEAD`.zip ./* -x \"*.DS_Store\"",
+    "zip:production": "mkdir -p ./dist/chrome && cd ./dist/chrome; zip -vr ../../dist/chrome/production-`echo $(git symbolic-ref --short HEAD) | tr / _`-`git rev-parse --short HEAD`.zip ./* -x \"*.DS_Store\"",
     "prepare:staging": "npm run build:staging && npm run zip:staging",
     "prepare:production": "npm run build:production && npm run zip:production",
     "format": "prettier --write \"src/**/*.tsx\" \"src/**/*.ts\" \"src/**/*.js\"",
@@ -21,7 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@pechext/extension-essentials-lib": "^0.1.4",
+    "@pechext/extension-essentials-lib": "^0.1.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "styled-components": "^6.0.8"
